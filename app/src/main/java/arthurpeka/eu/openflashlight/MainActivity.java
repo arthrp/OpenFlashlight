@@ -1,5 +1,7 @@
 package arthurpeka.eu.openflashlight;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.support.v7.app.ActionBarActivity;
@@ -26,6 +28,9 @@ public class MainActivity extends ActionBarActivity {
 
         boolean hasFlash = getApplicationContext().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+
+        if(!hasFlash)
+            showAlertAndExit("Your camera doesn't support flash");
 
         btnSwitch = (Button)findViewById(R.id.btnToggleFlashlight);
         txtFlashlightState = (TextView)findViewById(R.id.txtStatus);
@@ -88,5 +93,19 @@ public class MainActivity extends ActionBarActivity {
 
         String state = isFlashlightOn() ? "ON" : "OFF";
         txtFlashlightState.setText(state);
+    }
+
+    private void showAlertAndExit(String alertText){
+        AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
+                .create();
+        alert.setTitle("Error");
+        alert.setMessage(alertText);
+        alert.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // closing the application
+                finish();
+            }
+        });
+        alert.show();
     }
 }
